@@ -1,0 +1,20 @@
+# Allows sharing a Volume or File system unit on host machine between db pods
+# so that data is not lost when db pod is restarted/recreated
+# "Volume"
+#    - In container terminology,
+#       a mechanism that allows a container to access a filesystem outside itself
+#    -In k8s(more specific versions: Persistent Volume(outisde pod, Dynamic & Static), Persistent Volume Claim(storage advertisement for pods)),
+#       An Object that allows a container to store data at the pod lovel
+#
+#Advertisement
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database-persistent-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce #specify usage - ReadWriteOnce(1 RW), ReadOnlyMany(* R), ReadWriteMany(* RW)
+  resources:
+    requests:
+      storage: 2Gi #(Dynamic or Static)
+  #storageClassName -  not required for default option based on deployment env

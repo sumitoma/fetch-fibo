@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment #k8s object type to manage group of similar pods
+metadata:
+  name: server-deployment # deployment name
+spec:
+  replicas: 3 # number of pods to be created
+  selector:
+    matchLabels:
+      component: server
+  # pod template
+  template:
+    metadata:
+      labels:
+        component: server
+    spec:
+      containers:
+        - name: server
+          image: sumitoma/multi-server
+          ports:
+            - containerPort: 5000
+          env:
+            - name: REDIS_HOST
+              value: redis-cluster-ip-service
+            - name: REDIS_PORT
+              value: '6379'
+            - name: PGUSER
+              value: postgres
+            - name: PGHOST
+              value: postgres-cluster-ip-service
+            - name: PGPORT
+              value: '5432'
+            - name: PGDATABASE
+              value: postgres
+            - name: PGPASSWORD
+              valueFrom: #should be created via cmd in prod
+                secretKeyRef:
+                  name: pgpassword
+                  key: PGPASSWORD
