@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment #k8s object type to manage group of similar pods
+metadata:
+  name: client-deployment # deployment name
+spec:
+  replicas: 3 # number of pods to be created
+  selector:
+    matchLabels:
+      component: web
+  # pod template
+  template:
+    metadata:
+      labels:
+        component: web
+    spec:
+      containers:
+        - name: client
+          image: sumitoma/multi-client
+          ports:
+            - containerPort: 3000
